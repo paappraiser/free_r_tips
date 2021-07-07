@@ -1,0 +1,141 @@
+---
+title: "Linear Regression"
+author: "Trombly Appraisal"
+date: "5/29/2021"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+library(tidyverse)
+library(tidyquant)
+library(ggside)
+library(lubridate)
+```
+
+## R Markdown
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+```{r setup2, include=TRUE, echo=FALSE}
+
+options(scipen=5)
+
+my_data <- read.table(file = "clipboard", 
+                      sep = "\t", fill = TRUE , header=TRUE)
+
+head(my_data)
+df2 <- my_data
+df2 <- my_data %>% 
+  mutate(PendingDate = as.Date(PendingDate, format = "%m/%d/%Y")) %>% 
+  mutate(CloseDate = as.Date(CloseDate, format = "%m/%d/%Y")) %>% 
+  as_tibble(df2)
+
+```
+
+## Linear Regression Plots 
+
+```{r setup3, include=TRUE, echo=FALSE, warning=FALSE}
+df2 %>%
+  filter(ClosePrice > 1,) %>%
+  ggplot(aes(SqFtTotal, ClosePrice))+ 
+  geom_point(aes(color = ClosePrice))+
+  geom_smooth(method = lm, se = F)+
+  theme( axis.line = element_line(colour = "darkblue", 
+                                  size = 1, linetype = "solid"))
+modSqFtTotal <- lm(df2$ClosePrice ~ df2$SqFtTotal)
+summary(modSqFtTotal)
+
+
+df2 %>%
+  filter(ClosePrice > 1,) %>%
+  ggplot(aes(LotSize, ClosePrice))+ 
+  geom_point(aes(color = ClosePrice))+
+  geom_smooth(method = lm, se = F)+
+  theme( axis.line = element_line(colour = "darkblue", 
+                                  size = 1, linetype = "solid"))
+
+modLotSize <- lm(df2$ClosePrice ~ df2$LotSize)
+summary(modLotSize)
+
+df2 %>%
+  filter(ClosePrice > 1,) %>%
+  ggplot(aes(PendingDate, ClosePrice))+
+  geom_point(aes(color = ClosePrice))+
+  geom_smooth(method = lm, se = F)+
+  theme( axis.line = element_line(colour = "darkblue", 
+                                  size = 1, linetype = "solid"))
+
+modPendingDate <- lm(df2$ClosePrice ~ df2$PendingDate)
+summary(modPendingDate)
+
+df2 %>%
+  filter(ClosePrice > 1,) %>%
+  ggplot(aes(CloseDate, ClosePrice))+
+  geom_point(aes(color = ClosePrice))+
+  geom_smooth(method = lm, se = F)+
+  theme( axis.line = element_line(colour = "darkblue", 
+                                  size = 1, linetype = "solid"))
+
+modCloseDate <- lm(df2$ClosePrice ~ df2$CloseDate)
+summary(modCloseDate)
+
+
+df2 %>%
+  filter(ClosePrice > 1,) %>%
+  ggplot(aes(YearBuilt, ClosePrice))+ 
+  geom_point(aes(color = ClosePrice))+
+  geom_smooth(method = lm, se = F)+
+  theme( axis.line = element_line(colour = "darkblue", 
+                                  size = 1, linetype = "solid"))
+
+modYearBuilt <- lm(df2$ClosePrice ~ df2$YearBuilt)
+summary(modYearBuilt)
+
+
+df2 %>%
+  filter(ClosePrice > 1,) %>%
+  ggplot(aes(YearBuilt, ClosePrice))+ 
+  geom_point(aes(color = ClosePrice))
+
+
+df2 %>%
+  filter(ClosePrice > 1,) %>%
+  ggplot(aes(BedsMax, ClosePrice))+ 
+  geom_point(aes(color = ClosePrice))+
+  geom_smooth(method = lm, se = F)+
+  theme( axis.line = element_line(colour = "darkblue", 
+                                  size = 1, linetype = "solid"))
+
+modBedsMax <- lm(df2$ClosePrice ~ df2$BedsMax)
+summary(modBedsMax)
+
+
+df2 %>%
+  filter(ClosePrice > 1,) %>%
+  ggplot(aes(BathsFull, ClosePrice))+ 
+  geom_point(aes())+
+  geom_smooth(method = lm, se = F)+
+  xlim(c(0,6))+
+  theme( axis.line = element_line(colour = "darkblue", 
+                                  size = 1, linetype = "solid"))
+
+modBathsFull <- lm(df2$ClosePrice ~ df2$BathsFull)
+summary(modBathsFull)
+
+
+df2 %>%
+  filter(ClosePrice > 1,) %>%
+  ggplot(aes(NoOfGarageCap, ClosePrice))+ 
+  geom_point(aes())+
+  geom_smooth(method = lm, se = F)+
+  theme( axis.line = element_line(colour = "darkblue", 
+                                  size = 1, linetype = "solid"))
+
+modNoOfGarageCap <- lm(df2$ClosePrice ~ df2$NoOfGarageCap)
+summary(modNoOfGarageCap)
+
+
+
+
+```
+

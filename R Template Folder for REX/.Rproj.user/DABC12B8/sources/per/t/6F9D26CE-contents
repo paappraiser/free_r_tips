@@ -1,0 +1,54 @@
+---
+title: "MultiVariable Regression"
+author: "The Real Estate Examiner"
+date: "Today's Date"
+output: pdf_document
+---
+
+## Linear Model Results
+```{r setup, include=FALSE}
+library(tidyverse) 
+library(lubridate)
+library(predict3d)
+```
+
+## Regression Plot
+
+```{r setup3, include=TRUE, echo=FALSE}
+my_data <- read.table(file = "clipboard", 
+                      sep = "\t", fill = TRUE , header=TRUE) 
+
+options(scipen=5)
+
+
+df2 <- my_data %>% 
+  filter(ClosePrice > 1,) %>%
+  mutate(PendingDate = as.Date(PendingDate, format = "%m/%d/%Y")) %>% 
+  mutate(CloseDate = as.Date(CloseDate, format = "%m/%d/%Y"))
+
+df2$YearSold <- df2$CloseDate
+df2$YearSold = as.integer(format(as.Date(df2$CloseDate), "%Y"))
+plot(df2$YearBuilt)
+df2$Age <- df2$YearSold - df2$YearBuilt
+df2$PoolInt <- as.integer(df2$PoolPrivate)
+
+results <- lm(ClosePrice~SqFtTotal+LotSize+Stories+Age+BedsTotal+BathsTotal+NoOfGarageCap+Age+PoolInt, df2)
+results
+
+Prediction <- predict(results, newdata = df2)
+df2$Predicted <- Prediction
+
+
+ggplot(df2, aes(x=(Predicted), y=ClosePrice)) +
+  geom_point() +
+  geom_abline(intercept=0, slope=1) +
+  labs(x='Predicted Values', y='Actual Values', title = 'Predicted vs. Actual Values')
+
+
+
+summary(results)
+anova(results)
+coef(results)
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
